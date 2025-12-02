@@ -1,7 +1,15 @@
-// api/send-email.js
+const express = require('express');
+const cors = require('cors');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-export default async function handler(req, res) {
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+app.post('/api/send-email', async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -22,7 +30,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No valid recipient emails provided' });
   }
 
-  // Optional hard cap to avoid accidental massive blasts
   if (recipients.length > 1000) {
     return res
       .status(400)
@@ -53,4 +60,10 @@ export default async function handler(req, res) {
     console.error('Error sending email:', error);
     res.status(500).json({ error: 'Failed to send email' });
   }
-}
+});
+
+app.listen(PORT, () => {
+  console.log(`Email server listening on port ${PORT}`);
+});
+
+

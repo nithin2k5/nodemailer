@@ -32,7 +32,8 @@ function App() {
       const data = await response.json();
       
       if (response.ok) {
-        setStatus('Email sent successfully!');
+        const countText = data.sentTo ? ` to ${data.sentTo} recipient(s)` : '';
+        setStatus(`Email sent successfully${countText}!`);
         setFormData({ to: '', subject: '', text: '' });
       } else {
         setStatus(`Failed to send email: ${data.error || 'Unknown error'}`);
@@ -52,21 +53,21 @@ function App() {
         <div className="form-wrapper">
           <div className="form-header">
             <h2>Nodemailer</h2>
-            <p>Testing to send a mail to the receiver!</p>
+            <p>Send an email to one or many recipients (up to 1000 at once).</p>
           </div>
 
           <form onSubmit={handleSubmit} className="contact-form" noValidate>
             <div className="input-group">
               <div className="input-field-wrapper">
                 <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" /><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" /></svg>
-                <input
-                  type="email"
+                <textarea
                   id="to"
                   name="to"
-                  className="input-field"
+                  className="input-field with-icon"
                   value={formData.to}
                   onChange={handleChange}
-                  placeholder="Recipient's Email"
+                  placeholder="Recipient emails (comma or new-line separated, up to 1000)"
+                  rows="4"
                   required
                 />
               </div>
@@ -79,7 +80,7 @@ function App() {
                   type="text"
                   id="subject"
                   name="subject"
-                  className="input-field"
+                  className="input-field with-icon"
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="Subject"
